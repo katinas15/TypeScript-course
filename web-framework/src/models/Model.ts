@@ -11,7 +11,7 @@ interface Sync<T> {
   save(data: T): AxiosPromise;
 }
 
-interface Events {
+export interface Events {
   on(eventName: string, callback: () => void): void;
   trigger(eventName: string): void;
 }
@@ -27,9 +27,17 @@ export class Model<T extends HasId> {
     private sync: Sync<T>
   ) {}
 
-  on = this.events.on;
-  trigger = this.events.trigger;
-  get = this.attributes.get;
+  get on() {
+    return this.events.on;
+  }
+
+  get trigger() {
+    return this.events.trigger;
+  }
+
+  get(name: string) {
+    return this.attributes.get(name);
+  }
 
   set(update: T): void {
     this.attributes.set(update);

@@ -1,22 +1,24 @@
-type Callback = () => void
+import { Events } from "./Model";
 
-export class Eventing {
-    events: { [key: string]: Callback[] } = {}
+type Callback = () => void;
 
-    on = (eventName: string, callback: Callback): void => {
-        const handlers = this.events[eventName] || []
-        handlers.push(callback)
-        this.events[eventName] = handlers
+export class Eventing implements Events {
+  events: { [key: string]: Callback[] } = {};
+
+  on = (eventName: string, callback: Callback): void => {
+    const handlers = this.events[eventName] || [];
+    handlers.push(callback);
+    this.events[eventName] = handlers;
+  };
+
+  trigger = (eventName: string): void => {
+    const handlers = this.events[eventName];
+    if (!handlers || !handlers.length) {
+      return;
     }
 
-    trigger = (eventName: string): void => {
-        const handlers = this.events[eventName]
-        if (!handlers || !handlers.length) {
-            return
-        }
-
-        handlers.forEach((callback) => {
-            callback()
-        })
-    }
+    handlers.forEach((callback) => {
+      callback();
+    });
+  };
 }
